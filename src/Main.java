@@ -20,13 +20,13 @@ public class Main {
 
 		writer.write("gridSize(" + gridSize[0] + "," + gridSize[1] + ").");
 		writer.write('\n');
-		writer.write("iAt(" + ironmanPos[0] + "," + ironmanPos[1] + ").");
+		writer.write("iAt(" + ironmanPos[0] + "," + ironmanPos[1] + ",s0" + ").");
 		writer.write('\n');
 		writer.write("tAt(" + thanosPos[0] + "," + thanosPos[1] + ").");
 		writer.write('\n');
 		
 		for(int i = 1; i <= 4; i++) {
-			writer.write("sAt(" + i + "," + stonesPos[(i-1)*2] + "," + stonesPos[(i*2)-1] + ").");
+			writer.write("sAt(" + stonesPos[(i-1)*2] + "," + stonesPos[(i*2)-1] + ",s0" + ").");
 			writer.write('\n');
 		}
 		
