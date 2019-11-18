@@ -56,7 +56,7 @@ iAt(X,YN,SN):-
     Y0 > 0,
     YN is Y0 - 1,
     action(A),
-    iAt(X, YN, SN),
+    % iAt(X, YN, SN),
     A = left.
 
 % Ironman at (X, Y, SN) exists there if he was on Y0 before which is at least one cell away from the borders (grid size),
