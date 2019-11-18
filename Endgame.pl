@@ -23,30 +23,37 @@ result(A,S):-
 
 iAt(X,Y,SN):-
     iAt(X,Y,SO),
+    sAt(X,Y,SO)
     SN = result(A,SO),
     A = collect.
 
 iAt(X,YN,SN):-
     iAt(X,YO,SO),
-    YO is YN - 1,
+    YO >= 0,
+    YN is YO - 1,
     action(A),
     SN = result(A,SO),
     A = left.
 iAt(X,YN,SN):-
+    gridSize(GX,GY),
     iAt(X,YO,SO),
-    YO is YN + 1,
+    YO < GY - 1,
+    YN is YO + 1,
     action(A),
     SN = result(A,SO),
     A = right.
 iAt(XN,Y,SN):-
+    gridSize(GX,GY),
     iAt(XO,Y,SO),
-    XO is XN + 1,
+    XO < GY - 1,
+    XN is XO + 1,
     action(A),
     SN = result(A,SO),
     A = down.
 iAt(XN,Y,SN):-
     iAt(XO,Y,SO),
-    XO is XN - 1,
+    XO >= 0,
+    XN is XO - 1,
     action(A),
     SN = result(A,SO),
     A = up.
@@ -54,7 +61,7 @@ iAt(XN,Y,SN):-
 
 sAt(X,Y,SN):-
     SN = result(A,SO),
-    sAt(X,Y,s0),
+    sAt(X,Y,SO),
     A \= action(collect).
 
 
@@ -64,8 +71,15 @@ snapped1(S):-
     iAt(X,Y,SO).
 
 
+generateLimit(10).
+generateLimit(L):-
+    generateLimit(O),
+    O < 50,
+    L is O + 1.
+
+
 snapped(S):-
-    gener(L),
-    call_with_depth_limit(snapped1(S),L,R),
+    generateLimit(L),
+    call_with_depth_limit(snapped1(S),L,_),
     R \= depth_limit_exceeded,
     !.
