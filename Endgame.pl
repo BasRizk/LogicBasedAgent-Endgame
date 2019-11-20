@@ -1,9 +1,11 @@
 % Example at the point
-gridSize(2,2).
-iAt(0,0,s0).
-tAt(1,1).
-sAt(1,0,0,0,s0).
-sAt(2,1,0,0,s0).
+gridSize(5,5).
+iAt(1,2,s0).
+tAt(3,4).
+sAt(1,1,1,0,s0).
+sAt(2,2,1,0,s0).
+sAt(3,2,2,0,s0).
+sAt(4,3,3,0,s0).
 
 %       0   1   2   3   4
 %   0 |   |   |   |   |   |
@@ -15,27 +17,12 @@ sAt(2,1,0,0,s0).
 % gridSize(2,2).
 % iAt(0,0,s0).
 % tAt(1,1).
+% sAt(1,0,0,0,s0).
+% sAt(2,1,0,0,s0).
 
 
-%  Defined Operators
-action(up).
-action(down).
-action(left).
-action(right).
-action(collect).
-
-% Output form to follow successor state axioms
-result(A,s0):-
-    action(A).
-
-result(A,S):-
-    action(A),
-    S = result(_,_).
-
-    
 sAt(ID,X,Y,1,SN):-
     (SN = result(A,S0),
-    action(A),
     A = collect,
     sAt(ID,X,Y,0,s0),
     iAt(X,Y,S0));
@@ -48,14 +35,11 @@ sAt(ID,X,Y,1,SN):-
 iAt(X,Y,SN):-
     (SN = result(A,S0),
     A = collect,
-    sAt(ID,X,Y,0,s0),
-    sAt(ID,X,Y,1,SN),
     iAt(X,Y,S0));
 
 % Ironman at (X, Y, SN) exists there if he was on Y0 before which is at least one cell away from the borders (0-index),
 % and he moved left.
     (SN = result(A,S0),
-    action(A),
     A = left,
     iAt(X,Y0,S0),
     Y0 > 0,
@@ -65,7 +49,6 @@ iAt(X,Y,SN):-
 % Ironman at (X, Y, SN) exists there if he was on Y0 before which is at least one cell away from the borders (grid size),
 % and he moved right.
     (SN = result(A,S0),
-    action(A),
     A = right,
     iAt(X,Y0,S0),
     gridSize(_,GY),
@@ -76,7 +59,6 @@ iAt(X,Y,SN):-
 % Ironman at (X, Y, SN) exists there if he was on X0 before which is at least one cell away from the borders (grid size),
 % and he moved down.
     (SN = result(A,S0),
-    action(A),
     A = down,
     iAt(X0,Y,S0),
     gridSize(GX,_),
@@ -87,7 +69,6 @@ iAt(X,Y,SN):-
 % Ironman at (X, Y, SN) exists there if he was on X0 before which is at least one cell away from the borders (0-index),
 % and he moved up.
     (SN = result(A,S0),
-    action(A),
     A = up,
     iAt(X0,Y,S0),
     X0 > 0,
@@ -101,7 +82,9 @@ snapped1(S):-
     tAt(X, Y),
     iAt(X, Y, S0),
     sAt(1,_,_,1,S0),
-    sAt(2,_,_,1,S0).
+    sAt(2,_,_,1,S0),
+    sAt(3,_,_,1,S0),
+    sAt(4,_,_,1,S0).
 
 
 
