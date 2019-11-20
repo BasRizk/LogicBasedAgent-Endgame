@@ -17,6 +17,15 @@ iAt(1,2, s0).
 %   3 |   |   |   | s | t |
 %   4 |   |   |   |   |   |
 
+% Successful Example could be:
+%%%%%%%%%% PASSING %%%%%%%
+% Only sAt(2,2)
+% result(snap, result(right, result(right, result(down, result(collect, result(down, s0))))))
+%%%%%%%%%% INCORRECT BUT PASSING EXAMPLE
+% result(snap, result(right, result(left, result(right, result(left, result(right, result(right, result(down, result(down, s0))))))))).
+%  
+
+
 % gridSize(2,2).
 % iAt(0,0,s0).
 % tAt(1,1).
@@ -24,7 +33,7 @@ iAt(1,2, s0).
 
 %  Defined Operators
 action(collect).
-% action(snap).
+action(snap).
 action(up).
 action(down).
 action(left).
@@ -84,7 +93,7 @@ iAt(X,Y,result(A,S)):-
             stoneExists(X, Y, S),
             not(stoneExists(X, Y, result(collect, S)))
             % ,print("STONE IN PLACE"), nl
-            ,print(S), nl
+            % ,print(S), nl
             );
             
             (A = left,
@@ -134,8 +143,7 @@ stoneExists(X, Y, s0):-
     sAt(X,Y).
 stoneExists(X, Y, result(A, S)):-
     stoneExists(X, Y, S), 
-    (not(iAt(X, Y, S)), action(A));
-
+    ( (not(iAt(X, Y, S)), action(A)); (iAt(X,Y,S), action(A), A \= collect) );
     (
         stoneExists(X,Y,S),
         (
@@ -154,14 +162,16 @@ stoneExists(X, Y, result(A, S)):-
 
 % Snap is performed if there exists a situation S0 previously where thanos and ironman at the same position.
 snap(result(snap, S)):-  
-    (tAt(X, Y), iAt(X, Y, S), not(stoneExists(_,_,S)));
-    (snap(S),
-        (
-            % (iAt(X, Y, S) -> tAt(X, Y), not(stoneExists(_,_,S))),
-            (tAt(X, Y) -> iAt(W, V, S), (W\=X; V\=Y))
-            % (tAt(X, Y) -> i)
-        )
-    ).
+    (tAt(X, Y), iAt(X, Y, S), print("allocated plan"), nl, not(stoneExists(_,_,S)), print("no stones should exist anymore") )
+    % (snap(S),
+    %     (
+    %         % (iAt(X, Y, S) -> tAt(X, Y), not(stoneExists(_,_,S))),
+    %         print("HERE WE ARE");
+    %         (tAt(X, Y) -> iAt(W, V, S), (W\=X; V\=Y))
+    %         % (tAt(X, Y) -> i)
+    %     )
+    % )
+    .
 
 % Ironman At (X, Y, SN) exists there if he was already there, and there was stone there, and he collected it.
 % iAt(X, Y, result(collect, S)):-
