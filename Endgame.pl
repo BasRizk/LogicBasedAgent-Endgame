@@ -6,7 +6,7 @@ gridSize(5,5).
 % sAt(1,1).
 % sAt(2,1).
 sAt(2,2).
-sAt(3,3).
+% sAt(3,3).
 tAt(3,4).
 iAt(1,2, s0).
 
@@ -23,12 +23,12 @@ iAt(1,2, s0).
 
 
 %  Defined Operators
-% action(collect).
+action(collect).
 % action(snap).
-% action(up).
-% action(down).
-% action(left).
-% action(right).
+action(up).
+action(down).
+action(left).
+action(right).
 
 
 % notSnappedAlready(s0).
@@ -64,75 +64,102 @@ iAt(1,2, s0).
 % (S1 = result(A0, _), sAt(X, Y, S1), action(A0), iAt(X, Y, S1) -> action(A1), A1 \= collect, print("Case 1"), nl);
 % (S1 = result(A0, _), sAt(X, Y, S1), action(A0), not(iAt(X, Y, S1)), action(A1), print("Case 3"), nl).
 
+% sAt(ID,X,Y,1,result(collect,_)):-
+%     sAt(ID,X,Y,0,s0).
+
+% iAt(X,Y,result(collect,S0)):-
+%     sAt(ID,X,Y,0,s0),
+%     sAt(ID,X,Y,1,result(collect,S0)),
+%     iAt(X,Y,S0).
+
 % Ironman at (X, Y, SN) exists there if he was on Y0 before which is at least one cell away from the borders (0-index),
 % and he moved left.
 iAt(X,Y,result(A,S)):-
     (
-    (
-        (A = collect, 
-        % print("STATE -> COLLECT"), nl,
-        iAt(X, Y, S),
-        % print("POS IN PLACE"), nl,
-        sAt(X, Y)
-        % ,print("STONE IN PLACE"), nl
-        );
-        
-        (A = left,
-        iAt(X,Y0,S),
-        Y0 > 0,
-        Y is Y0 - 1,
-        not(sAt(X,Y0)));
-
-        (A = right,
-        iAt(X,Y0,S),
-        gridSize(_,GY),
-        Y0 < GY - 1,
-        Y is Y0 + 1,
-        not(sAt(X,Y0)));
-
-        (A = down,
-        iAt(X0,Y,S),
-        gridSize(GX,_),
-        X0 < GX - 1,
-        X is X0 + 1,
-        not(sAt(X0,Y)));
-
-        (A = up,
-        iAt(X0,Y,S),
-        X0 > 0,
-        X is X0 - 1,
-        not(sAt(X0,Y)))
-                
-    );
-    ( iAt(X, Y, S),
         (
-            (A = collect -> sAt(X, Y) );
-            ((A = left; A = right; A = up; A = down) -> gridSize(H, W), (X > H; X < 0; Y > W; Y < 0))
+            (A = collect, 
+            % print("STATE -> COLLECT"), nl,
+            iAt(X, Y, S),
+            % print("POS IN PLACE"), nl,
+            stoneExists(X, Y, S),
+            not(stoneExists(X, Y, result(collect, S)))
+            % ,print("STONE IN PLACE"), nl
+            ,print(S), nl
+            );
+            
+            (A = left,
+            iAt(X,Y0,S),
+            % not(stoneExists(X,Y0, S)),
+            Y0 > 0,
+            Y is Y0 - 1
+            );
+            
+            (A = right,
+            iAt(X,Y0,S),
+            % not(stoneExists(X,Y0, S)),
+            gridSize(_,GY),
+            Y0 < GY - 1,
+            Y is Y0 + 1
+            );
+
+            (A = down,
+            iAt(X0,Y,S),
+            % not(stoneExists(X0,Y, S)),
+            gridSize(GX,_),
+            X0 < GX - 1,
+            X is X0 + 1
+            );
+
+            (A = up,
+            iAt(X0,Y,S),
+            % not(stoneExists(X0,Y, S)),
+            X0 > 0,
+            X is X0 - 1
+            )
+                    
+        );
+        ( 
+            iAt(X, Y, S),
+            (
+                (A = collect -> stoneExists(X, Y, S), not(stoneExists(X,Y, result(collect, S))) ),
+                ((A = left; A = right; A = down; A = up) -> gridSize(H, W), (X > H; X < 0; Y > W; Y < 0))
+            )
         )
-    )
     )
     % , print(A), print(" "),
     % print(X), print(", "), print(Y), nl
-    .
+    . 
+    
+stoneExists(X, Y, s0):-
+    sAt(X,Y).
+stoneExists(X, Y, result(A, S)):-
+    stoneExists(X, Y, S), 
+    (not(iAt(X, Y, S)), action(A));
 
-
-collectStone(X, Y, result(A, S)):-
-    (A = collect, sAt(X, Y), iAt(X, Y, S));
-    (collectStone(X, Y, S),
+    (
+        stoneExists(X,Y,S),
         (
-            (A = collect, iAt(X, Y, S) -> sAt(X, Y) );
-            (A = collect, iAt(W, V, S), (W\=X; V\=Y) -> sAt(W, V))
+            A = collect -> (iAt(W, V, S), (W\=X; V\=Y), stoneExists(W, V, S), print("Stone exists there"), nl)
         )
     ).
 
+% collectStone(X, Y, result(A, S)):-
+%     (A = collect, sAt(X, Y), iAt(X, Y, S));
+%     (collectStone(X, Y, S),
+%         (
+%             (A = collect, iAt(X, Y, S) -> sAt(X, Y) );
+%             (A = collect, iAt(W, V, S), (W\=X; V\=Y) -> sAt(W, V))
+%         )
+%     ).
+
 % Snap is performed if there exists a situation S0 previously where thanos and ironman at the same position.
 snap(result(snap, S)):-  
-    % S = result(_, result(_,s0)).
-    (tAt(X, Y), iAt(X, Y, S));
+    (tAt(X, Y), iAt(X, Y, S), not(stoneExists(_,_,S)));
     (snap(S),
         (
-            % (iAt(X, Y, S) -> tAt(X, Y)),
+            % (iAt(X, Y, S) -> tAt(X, Y), not(stoneExists(_,_,S))),
             (tAt(X, Y) -> iAt(W, V, S), (W\=X; V\=Y))
+            % (tAt(X, Y) -> i)
         )
     ).
 
