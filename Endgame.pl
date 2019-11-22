@@ -1,12 +1,12 @@
 % Example 1
 % 
-% gridSize(5,5).
-% tAt(3,4).
-% sAt(1,1,1,s0).
-% sAt(2,2,1,s0).
-% sAt(3,2,2,s0).
-% sAt(4,3,3,s0).
-% iAt(1,2,s0).
+gridSize(5,5).
+tAt(3,4).
+sAt(1,1,1,s0).
+sAt(2,2,1,s0).
+sAt(3,2,2,s0).
+sAt(4,3,3,s0).
+iAt(1,2,s0).
 
 %       0   1   2   3   4
 %   0 |   |   |   |   |   |
@@ -102,7 +102,11 @@ generateLimit(L):-
 
 % snapped only if at some depth of a search tree there exists a snapped solution.
 snapped(S):-
+    var(S),
     generateLimit(L),
     call_with_depth_limit(snapped1(S),L,R),
     R \= depth_limit_exceeded,
     !.
+snapped(S):-
+    nonvar(S),
+    snapped1(S).
