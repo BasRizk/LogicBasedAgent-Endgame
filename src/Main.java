@@ -26,7 +26,7 @@ public class Main {
 		writer.write('\n');
 		
 		for(int i = 1; i <= 4; i++) {
-			writer.write("sAt(" + stonesPos[(i-1)*2] + "," + stonesPos[(i*2)-1] + ",s0" + ").");
+			writer.write("sAt(" + i + "," + stonesPos[(i-1)*2] + "," + stonesPos[(i*2)-1] + "," + 0 + ",s0" + ").");
 			writer.write('\n');
 		}
 		

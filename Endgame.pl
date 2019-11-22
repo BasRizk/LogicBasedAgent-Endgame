@@ -1,11 +1,13 @@
 % Example at the point
-gridSize(5,5).
-iAt(1,2,s0).
-tAt(3,4).
-sAt(1,1,1,0,s0).
-sAt(2,2,1,0,s0).
-sAt(3,2,2,0,s0).
-sAt(4,3,3,0,s0).
+% gridSize(5,5).
+% iAt(1,2,s0).
+% tAt(3,4).
+% sAt(1,1,1,0,s0).
+% sAt(2,2,1,0,s0).
+% sAt(3,2,2,0,s0).
+% sAt(4,3,3,0,s0).
+
+
 
 %       0   1   2   3   4
 %   0 |   |   |   |   |   |
@@ -14,6 +16,27 @@ sAt(4,3,3,0,s0).
 %   3 |   |   |   | s | t |
 %   4 |   |   |   |   |   |
 
+
+
+% gridSize(5,5).
+% iAt(2,2,s0).
+% tAt(4,2).
+% sAt(1,4,0,0,s0).
+% sAt(2,1,2,0,s0).
+% sAt(3,3,0,0,s0).
+% sAt(4,2,1,0,s0).
+
+
+
+%       0   1   2   3   4
+%   0 |   |   |   |   |   |
+%   1 |   |   | s |   |   |
+%   2 |   | s | i |   |   |
+%   3 | s |   |   |   |   |
+%   4 | s |   | t |   |   |
+
+
+
 % gridSize(2,2).
 % iAt(0,0,s0).
 % tAt(1,1).
@@ -21,6 +44,10 @@ sAt(4,3,3,0,s0).
 % sAt(2,1,0,0,s0).
 
 
+
+% In a state "SN", A stone was collected before in position (X,Y) if and only if
+% A "collect" action was performed in the previous state "S0" and Ironman was at (X,Y), where the stone exists and was not collected before.
+% Or, in "S0", the stone was collected before.
 sAt(ID,X,Y,1,SN):-
     (SN = result(A,S0),
     A = collect,
@@ -31,7 +58,7 @@ sAt(ID,X,Y,1,SN):-
     sAt(ID,X,Y,1,S0)).
 
 
-% Ironman At (X, Y, SN) exists there if he was already there, and there was stone there, and he collected it.
+% Ironman At (X, Y, SN) exists there if he was already there, and he performed the collect action.
 iAt(X,Y,SN):-
     (SN = result(A,S0),
     A = collect,
