@@ -107,6 +107,7 @@ snapped(S):-
     call_with_depth_limit(snapped1(S),L,R),
     R \= depth_limit_exceeded,
     !.
+% This to handle the case if a query with a wrong plan is given to not search with IDS algorithm to output false
 snapped(S):-
     nonvar(S),
     snapped1(S).
