@@ -42,7 +42,8 @@
 % sAt(1,0,0,s0).
 % sAt(2,1,0,s0).
 
-% Ironman At (X, Y, SN) exists there if he was already there, and he performed the collect action.
+% Ironman At (X, Y, SN) exists there if he was already there, and he performed the collect action,
+% Or, he was in a neighbor cell in the previous and he performed a move action that got him to the current cell.
 iAt(X,Y,result(A, S0)):-
     (A = collect,
     iAt(X,Y,S0));
