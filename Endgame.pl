@@ -1,3 +1,6 @@
+:-include('KB1.pl').
+% :-include('KB2.pl').
+
 % Example 1
 % 
 % gridSize(5,5).
