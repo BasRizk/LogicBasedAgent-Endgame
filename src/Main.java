@@ -27,10 +27,9 @@ public class Main {
 		
 		// write axioms for the four stones.
 		for(int i = 1; i <= 4; i++) {
-			// sAt(ID,X,Y,C,S) axiom of the fluent of stone collection (represents if the stone was collected before) 
-			// at height position X and width position Y in state S. s0 is the initial state.
-			// C is 1 if it is a collected stone, 0 otherwise. A stone is not collected initially.
-			writer.write("sAt(" + i + "," + stonesPos[(i-1)*2] + "," + stonesPos[(i*2)-1] + "," + 0 + ",s0" + ").");
+			// sAt(ID,X,Y,S) axiom of stone existance at height position X and width position Y
+			// at s0: the initial state. ID is just an ID for each stone
+			writer.write("sAt(" + i + "," + stonesPos[(i-1)*2] + "," + stonesPos[(i*2)-1] + ",s0" + ").");
 			writer.write('\n');
 		}
 
